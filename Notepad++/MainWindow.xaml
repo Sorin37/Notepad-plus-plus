@@ -1,0 +1,207 @@
+﻿<Window x:Class="Notepad__.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Notepad__"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800"
+        Closing="Window_Closing"
+        Icon="Images/WindowIcon.png"
+        >
+    <Grid >
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="3"/>
+            <ColumnDefinition Width="9*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="20" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Menu Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" Name="MyMenu">
+            <MenuItem Header="File">
+                <MenuItem Foreground ="Black" Header="New" Click="Button_Click_NewFile" >
+                    <MenuItem.Icon>
+                        <Image Source="/Images/NewTabIcon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Foreground ="Black" Header="Open..." Click="Button_Click_OpenFile">
+                    <MenuItem.Icon>
+                        <Image Source="/Images/OpenFileIcon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Foreground ="Black" Header="Save" Click="Button_Click_Save" >
+                    <MenuItem.Icon>
+                        <Image Source="/Images/SaveIcon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Foreground ="Black" Header="Save as..." Click="Button_Click_SaveAs" >
+                    <MenuItem.Icon>
+                        <Image Source="/Images/SaveAsIcon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Foreground ="Black" Header="Change name" Click="Button_Click_ChangeName" >
+                    <MenuItem.Icon>
+                        <Image Source="/Images/ChangeNameIcon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Foreground ="Black" Header="Dark Theme" Click="Button_Click_ChangeTheme" >
+                    <MenuItem.Icon>
+                        <Image Source="/Images/DarkThemeIcon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+                <MenuItem Foreground ="Black" Header="Exit" Click="CloseWindow">
+                    <MenuItem.Icon>
+                        <Image Source="/Images/ExitIcon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Search">
+                <MenuItem Foreground ="Black" Header="Find..." Click="MenuFind">
+                    <MenuItem.Icon>
+                        <Image Source="/Images/FindIcon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Foreground ="Black" Header="Replace..." Click="MenuReplace">
+                    <MenuItem.Icon>
+                        <Image Source="/Images/ReplaceIcon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Foreground ="Black" Header="Replace All..." Click="MenuReplaceAll">
+                    <MenuItem.Icon>
+                        <Image Source="/Images/ReplaceAllIcon.png"/>
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="Help">
+                <MenuItem Foreground ="Black" Header="About" >
+                    <MenuItem.Icon>
+                        <Image Source="/Images/AboutIcon.png"/>
+                    </MenuItem.Icon>
+                    <MenuItem Foreground ="Black" Header="Antal-Cionta Ioan Sorin">
+                        <MenuItem.Icon>
+                            <Image Source="/Images/MyNameIcon.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Foreground ="Black" Header="10LF301">
+                        <MenuItem.Icon>
+                            <Image Source="/Images/GroupIcon.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem Click="OpenURL">
+                        <MenuItem.Header>
+                            <TextBlock Foreground="Blue" TextDecorations="Underline">
+                                    Link
+                            </TextBlock>
+                        </MenuItem.Header>
+                        <MenuItem.Icon>
+                            <Image Source="/Images/LinkIcon.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <GridSplitter Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" >
+            <GridSplitter.Template>
+                <ControlTemplate TargetType="{x:Type GridSplitter}">
+                    <Grid>
+                        <Button Content="⁞" />
+                        <Rectangle Fill="LightGray" />
+                    </Grid>
+                </ControlTemplate>
+            </GridSplitter.Template>
+        </GridSplitter> 
+        <TreeView Name="TreeView" 
+                  Grid.Row="1" 
+                  Grid.Column="0"
+                  TreeViewItem.Expanded="OnExpanded"/>
+        <TabControl Name="MyTabControl" Grid.Row="1" Grid.Column="2" Background="White" >
+            <TabControl.BitmapEffect>
+                <DropShadowBitmapEffect Color="LightGray" Direction="300"/>
+            </TabControl.BitmapEffect>
+            <TabControl.Resources>
+                <Style TargetType="{x:Type Grid}" >
+                    <Setter Property="Background" Value="LightGray"/>
+                </Style>
+            </TabControl.Resources>
+            <TabControl.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Background="{Binding Theme, 
+                                                UpdateSourceTrigger = PropertyChanged}">
+                        <TextBlock Text="{Binding Header, 
+                                          Mode = OneWay}"
+                                   Foreground="{Binding Color, UpdateSourceTrigger=PropertyChanged}"
+                                   FontFamily="Consolas"/>
+                        <Button Click="OnTabCloseClick" 
+                                Width="20" 
+                                Padding="0" 
+                                Margin="8 0 0 0"
+                                BorderThickness="0">
+                            <Button.Content>
+                                <Image Source="/Images/CloseTabIcon.png"/>
+                            </Button.Content>
+                            <Button.Style>
+                                <Style TargetType="Button" 
+                                           x:Name="CloseButtonStyle">
+                                    <Setter Property="Visibility" 
+                                                Value="Visible"/>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsPlaceholder}" 
+                                                         Value="True">
+                                            <Setter Property="Visibility" 
+                                                        Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </StackPanel>
+                </DataTemplate>
+            </TabControl.ItemTemplate>
+
+            <TabControl.ContentTemplate>
+                <DataTemplate>
+                    <ContentControl>
+                        <ContentControl.Resources>
+                            <ContentControl x:Key="TabContentTemplate">
+                                <TextBox Text="{Binding Content, 
+                                                    UpdateSourceTrigger=PropertyChanged}"
+                                         AcceptsReturn="True"
+                                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                         FontFamily="Consolas"
+                                         Background="{Binding Theme, 
+                                                    UpdateSourceTrigger=PropertyChanged}"
+                                         Foreground="{Binding CounterTheme, 
+                                                    UpdateSourceTrigger=PropertyChanged}">
+                                    <TextBox.ContextMenu>
+                                        <ContextMenu Name="cxm" Opened="ClickCut">
+                                            <MenuItem Header="Cut" Name="cxmItemCut" Click="ClickCut"/>
+                                        </ContextMenu>
+                                    </TextBox.ContextMenu>
+                                </TextBox>
+                            </ContentControl>
+                        </ContentControl.Resources>
+                        <ContentControl.Style>
+                            <Style TargetType="ContentControl">
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding IsPlaceholder}" 
+                                                     Value="True">
+                                        <Setter Property="Content"
+                                                    Value="{x:Null}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding IsPlaceholder}" 
+                                                     Value="False">
+                                        <Setter Property="Content"
+                                                    Value="{StaticResource TabContentTemplate}"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ContentControl.Style>
+                    </ContentControl>
+                </DataTemplate>
+            </TabControl.ContentTemplate>
+        </TabControl>
+    </Grid>
+</Window>
